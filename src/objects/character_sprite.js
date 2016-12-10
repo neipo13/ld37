@@ -1,6 +1,7 @@
 class CharacterSprite extends Phaser.Sprite{
   constructor(game, x, y, imageName){
     super(game, x, y, imageName);
+    game.physics.arcade.enable(this);
     this.animations.add('idle', [0], 0 , false);
     this.animations.add('walk', [0,1,2], 15, true);
     var attack1Anim = this.animations.add('attack1', [3,4,5], 15, false);

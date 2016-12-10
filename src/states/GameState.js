@@ -1,4 +1,5 @@
 import PlayerCharacter from 'objects/player_character';
+import EnemyCharacter from 'objects/enemy_character';
 import CharacterSprite from 'objects/character_sprite';
 import WallCollider from 'objects/wall';
 import Input from 'util/input';
@@ -17,6 +18,10 @@ class GameState extends Phaser.State {
 		this.player = new PlayerCharacter(this.game, 200, 200);
 		this.player.animator = new CharacterSprite(this.game, 0 ,0, 'hero');
 		this.player.addChild(this.player.animator);
+		//debug EnemyCharacter
+		this.enemyDebug = new EnemyCharacter(this.game, 200, 200);
+		this.enemyDebug.animator = new CharacterSprite(this.game, 0 ,0, 'hero');
+		this.enemyDebug.addChild(this.enemyDebug.animator);
 		//4 walls
 		//stupid but quick?
 		this.north = new WallCollider(this.game, 0, 120, true, false);
@@ -30,6 +35,7 @@ class GameState extends Phaser.State {
 	update(){
 		var input = this.input.update();
 		this.player.doUpdate(input);
+		this.enemyDebug.doUpdate(this.player);
 		this.collide();
 	}
 
@@ -41,6 +47,16 @@ class GameState extends Phaser.State {
 		this.game.physics.arcade.collide(this.player, this.east);
 
 		//player attackbox and enemy
+		this.game.physics.arcade.collide(
+			this.enemyDebug,
+			this.player.attack1,
+			this.enemyDebug.hit,
+			playerHitCheck);
+
+		function playerHitCheck(enemy, playerAttack){
+			console.log(playerAttack.collisionEnabled);
+			return playerAttack.collisionEnabled;
+		}
 	}
 
 	render(){

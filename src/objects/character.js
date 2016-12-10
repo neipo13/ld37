@@ -24,6 +24,8 @@ class Character extends Phaser.Sprite{
     this.recentAttack1 = false;
     this.recentAttack2 = false;
     this.recentAttack3 = false;
+
+    this.isHit = false;
     this.game.stage.addChild(this);
     this.addChild(this.attack1);
 
@@ -39,43 +41,44 @@ class Character extends Phaser.Sprite{
 
 
   move(input){
-      var moving = false;
-      var facing = '';
-      var vel = new Phaser.Point();
-      if(input.up){
-        moving = true;
-        vel.y -= 1;
-      }
-      if(input.down){
-        moving = true;
-        vel.y += 1;
-      }
-      if(input.right){
-        moving = true;
-        facing = 'R';
-        vel.x += 1;
-      }
-      if(input.left){
-        moving = true;
-        facing  = 'L';
-        vel.x -= 1;
-      }
-      vel.normalize();
-      vel.setMagnitude(this.speed);
+    if(this.isHit){ return; }
+    var moving = false;
+    var facing = '';
+    var vel = new Phaser.Point();
+    if(input.up){
+      moving = true;
+      vel.y -= 1;
+    }
+    if(input.down){
+      moving = true;
+      vel.y += 1;
+    }
+    if(input.right){
+      moving = true;
+      facing = 'R';
+      vel.x += 1;
+    }
+    if(input.left){
+      moving = true;
+      facing  = 'L';
+      vel.x -= 1;
+    }
+    vel.normalize();
+    vel.setMagnitude(this.speed);
 
-      this.body.velocity = vel;
-      //set some animator props
-      if(this.animator != null){
-        this.animator.moving = moving;
-        if(facing == 'R'){
-          //this.animator.facingRight = true;
-          this.scale.x = 1;
-        }
-        else if(facing == 'L'){
-          //this.animator.facingRight = false;
-          this.scale.x = -1;
-        }
+    this.body.velocity = vel;
+    //set some animator props
+    if(this.animator != null){
+      this.animator.moving = moving;
+      if(facing == 'R'){
+        //this.animator.facingRight = true;
+        this.scale.x = 1;
       }
+      else if(facing == 'L'){
+        //this.animator.facingRight = false;
+        this.scale.x = -1;
+      }
+    }
   }
 
   attack(input){
@@ -90,7 +93,7 @@ class Character extends Phaser.Sprite{
           this.lastFrameAttack = true;
           this.recentAttack1 = true;
           this.game.time.events.add(this.attackTime, this.setAttack1False, this);
-          //this.attack1.turnOn(this.attackTime/2); //should be very brief
+          this.attack1.turnOn(this.attackTime/2); //should be very brief
         }
         else if(this.recentAttack1 && !this.recentAttack2
           && !this.animator.attack1 && !this.animator.attack2  && !this.lastFrameAttack){
@@ -126,6 +129,19 @@ class Character extends Phaser.Sprite{
   //show sprite info
   debugRender(){
     this.game.debug.body(this.attack1);
+  }
+
+  hit(character, enemy){
+    if(character.isHit){return;}
+    console.log("im hit");
+    character.isHit = true;
+    character.hp -= 1;
+    //set some animaton state
+    character.game.time.events.add(character.attackTime, character.recoverHit, character);
+  }
+
+  recoverHit(){
+    this.isHit = false;
   }
 
 

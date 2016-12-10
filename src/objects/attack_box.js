@@ -6,6 +6,7 @@ class AttackBox extends Phaser.Sprite{
     game.physics.arcade.enable(this, true);
     this.body.setSize(width, height);
     this.anchor.setTo(.5, .5);
+	  this.body.immovable = true;
     //start off
     this.collisionEnabled = false;
     //set attack's damage
@@ -19,6 +20,7 @@ class AttackBox extends Phaser.Sprite{
     this.game.time.events.add(timeSpanInMs, this.turnOff, this);
   }
   turnOff(){
+    console.log('collision off');
     this.collisionEnabled = false;
   }
 }
