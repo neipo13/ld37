@@ -1,11 +1,35 @@
-import RainbowText from 'objects/RainbowText';
+import Character from 'objects/character';
+import WallCollider from 'objects/wall';
 
 class GameState extends Phaser.State {
 
 	create() {
-		let center = { x: this.game.world.centerX, y: this.game.world.centerY }
-		let text = new RainbowText(this.game, center.x, center.y, "Ludum Dare\n37\nES6 + Phaser!");
-		text.anchor.set(0.5);
+		//player character
+		this.player = new Character(this.game, 200, 200);
+		//4 walls
+		//stupid but quick?
+		this.north = new WallCollider(this.game, 0, 420, true, false);
+		this.south = new WallCollider(this.game, 0, 0, true, false);
+		this.west = new WallCollider(this.game, 0, 0, false, true);
+		this.east = new WallCollider(this.game, 640, 0, false, false);
+	}
+
+	update(){
+		this.player.update();
+		this.collide();
+	}
+
+	collide(){
+		//player and walls
+		this.game.physics.arcade.collide(this.player, this.north);
+		this.game.physics.arcade.collide(this.player, this.south);
+		this.game.physics.arcade.collide(this.player, this.west);
+		this.game.physics.arcade.collide(this.player, this.east);
+	}
+
+	render(){
+		this.player.debugRender();
+		//this.north.debugRender();
 	}
 
 }
