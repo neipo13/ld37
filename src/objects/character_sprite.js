@@ -17,7 +17,7 @@ class CharacterSprite extends Phaser.Sprite{
     }, this);
     this.animations.play('idle');
     this.anchor.setTo(.5, .5);
-    this.scaleSize = 4;
+    this.scaleSize = 2;
     this.scale.setTo(this.scaleSize, this.scaleSize);
 
     //animation variables
@@ -25,7 +25,7 @@ class CharacterSprite extends Phaser.Sprite{
     this.attack1 = false;
     this.attack2 = false;
     this.attack3 = false;
-    this.facingRight = true;
+    //this.facingRight = true;
   }
 
   update(){
@@ -47,12 +47,12 @@ class CharacterSprite extends Phaser.Sprite{
     }
 
     //scale
-    if(this.facingRight){
-      this.scale.x = this.scaleSize;
-    }
-    else{
-      this.scale.x = -this.scaleSize;
-    }
+    // if(this.facingRight){
+    //   this.scale.x = this.scaleSize;
+    // }
+    // else{
+    //   this.scale.x = -this.scaleSize;
+    // }
   }
 
   animate(animName){
